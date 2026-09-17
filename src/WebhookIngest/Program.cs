@@ -25,6 +25,8 @@ builder.Services.AddIngestDatabase();
 builder.Services.AddSingleton<SvixSignatureVerifier>();
 builder.Services.AddSingleton<IMetricsQueue, MetricsQueue>();
 builder.Services.AddScoped<EventIngestor>();
+builder.Services.AddScoped<CampaignMetricsService>();
+builder.Services.AddHostedService<MetricsRecomputer>();
 
 builder.Services.AddHealthChecks().AddDbContextCheck<IngestDbContext>();
 builder.Services.AddOpenApi();
@@ -40,5 +42,6 @@ await using (var scope = app.Services.CreateAsyncScope())
 app.MapOpenApi();
 app.MapHealthChecks("/health");
 app.MapWebhookEndpoints();
+app.MapMetricsEndpoints();
 
 app.Run();
